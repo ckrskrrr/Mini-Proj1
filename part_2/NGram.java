@@ -6,9 +6,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
-import java.io.IOException;
-
-import java.io.IOException;
 
 public class NGram {
 
@@ -21,7 +18,7 @@ public class NGram {
 
         @Override
         protected void setup(Context context) {
-            // Get the value of 'n' from configuration
+            // get n from config
             Configuration conf = context.getConfiguration();
             n = conf.getInt("ngram.n", 2); // default n=2
         }
@@ -32,7 +29,7 @@ public class NGram {
             
             String line = value.toString();
             
-            // Generate all n-grams from this line
+            // generate all n-grams from this line
             for (int i = 0; i <= line.length() - n; i++) {
                 String ngram = line.substring(i, i + n);
                 ngramText.set(ngram);
@@ -69,23 +66,23 @@ public class NGram {
 
         Configuration conf = new Configuration();
         
-        // Set the 'n' parameter from command line
+        //set n from command line
         int n = Integer.parseInt(args[0]);
         conf.setInt("ngram.n", n);
 
         Job job = Job.getInstance(conf, "N-Gram Count");
         job.setJarByClass(NGram.class);
         
-        // Set Mapper and Reducer classes
+        //mapper and reducer
         job.setMapperClass(NGramMapper.class);
-        job.setCombinerClass(NGramReducer.class); // Combiner = local reduction
+        job.setCombinerClass(NGramReducer.class);
         job.setReducerClass(NGramReducer.class);
 
-        // Set output key/value types
+        //output key/value types
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        // Set input and output paths
+        //input and output paths
         FileInputFormat.addInputPath(job, new Path(args[1]));
         FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
