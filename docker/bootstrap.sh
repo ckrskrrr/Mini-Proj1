@@ -1,14 +1,27 @@
-#!/bin/bash
-
 # start ssh server
-#/etc/init.d/ssh start
+service ssh start
 
 # format namenode
 
-sudo $hadoop_path/bin/hdfs namenode -format
+if [ ! -d /tmp/hadoop-root/dfs/name/current ]; then
+    echo "Formatting NameNode..."
+    $HADOOP_HOME/bin/hdfs namenode -format -force
+fi
+
 
 #start hadoop
-$hadoop_path/sbin/start-dfs.sh
-$hadoop_path/sbin/start-yarn.sh
-$hadoop_path/sbin/mr-jobhistory-daemon.sh start historyserver
+echo "Starting HDFS..."
+$HADOOP_HOME/sbin/start-dfs.sh
+
+#yarn
+echo "Starting YARN..."
+$HADOOP_HOME/sbin/start-yarn.sh
+
+# Start JobHistory Server
+echo "Starting JobHistory Server..."
+$HADOOP_HOME/bin/mapred --daemon start historyserver
+
+echo "Hadoop services started successfully!"
+
+#keep the container running
 tail -f /dev/null
