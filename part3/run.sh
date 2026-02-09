@@ -2,7 +2,7 @@ chmod +x mapper_q1_q5.py reducer_q1_q5.py
 
 # make sure log is in HDFS
 hdfs dfs -mkdir -p /logs
-hdfs dfs -put -f /access_log /logs/access_log
+hdfs dfs -put -f /project/part3/access_log /logs/access_log
 
 hdfs dfs -rm -r -f /out_q1_q5
 
